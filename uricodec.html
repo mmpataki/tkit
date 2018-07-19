@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URI codec</title>
+</head>
+<body>
+    <h2>URI encoder</h2>
+    <hr/>
+    <input oninput="document.getElementById('enc').value = encodeURI(this.value);" style="width: 300"/>
+    <br/>
+    <br/>
+    <textarea id='enc' rows="10" cols="100"></textarea>
+    <br/>
+    <br/>
+    <h2>URI decoder</h2>
+    <hr/>
+    <input oninput="document.getElementById('dec').value = decodeURI(this.value);" style="width: 300"/>
+    <br/>
+    <br/>
+    <textarea id='dec' rows="10" cols="100"></textarea>
+</body>
+</html>

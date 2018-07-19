@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Hive Task analysis</title>
+    <style>
+    textarea {
+        width: 100%;
+        height: 300px;
+    }
+    </style>
+    <script>
+        function g(id) { return document.getElementById(id); }
+        function uploadfile(e, id) {
+            var r = new FileReader();
+            r.onload = function (ex) {
+                g(id).value = ex.target.result;
+                analyze(ex.target.result)
+            }
+            r.readAsText(e.target.files[0], "UTF-8");
+        }
+        var regs = [
+            /(.*The Integration Service started running the Hive task \[exec[0-9]+\]|.*The Integration Service started running the Hive command \[.*exec[0-9]+_command_[0-9]+\] with the command line \[.*\] for the task \[.*exec[0-9]+\].*\n.*|.*The Integration Service started running the Hive query \[.*_exec[0-9]+_query_[0-9]+\] with the query \[.*\] for the task \[exec[0-9]+\]\.|.*\[HIVE_1099\] The Integration Service started running the cleanup task\.)/g
+        ];
+        window.onload = function() {
+            analyze(g('logbox').value);
+        } 
+        function analyze(text) {
+            g('out').value = ""
+            var lines = text.split("\n")
+            for (let i = 0; i < lines.length; i++) {
+                const e = lines[i];
+                for (let j = 0; j < regs.length; j++) {
+                    const r = regs[j];
+                    if(r.test(e))
+                        out(e);
+                }
+            }
+        }
+        function out(x) {
+            g('out').value += `${x}\n`
+        }
+    </script>
+</head>
+
+<body>
+    <input type="file" id="files" name="files[]" onchange="uploadfile(event, 'logbox')" />
+    <textarea oninput="analyze(this.value)" id='logbox'></textarea>
+    <textarea id='out'></textarea>
+</body>
+
+</html>
